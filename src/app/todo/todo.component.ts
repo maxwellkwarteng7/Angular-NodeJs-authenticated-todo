@@ -10,6 +10,7 @@ import { getAllUserTodos, getUsernameAsKey } from "../models/data";
 import { Router } from "@angular/router";
 import { todo } from "../models/interface";
 import { NotificationService } from "../services/notification.service";
+import { CookieService } from "ngx-cookie-service";
 
 @Component({
   selector: "app-todo",
@@ -19,7 +20,7 @@ import { NotificationService } from "../services/notification.service";
   styleUrl: "./todo.component.scss",
 })
 export class TodoComponent implements OnInit {
-  constructor(private router: Router, private notify: NotificationService) {}
+  constructor(private router: Router, private notify: NotificationService , private cookie : CookieService ) {}
 
   userTodos = signal<todo[] | null>([]);
 
@@ -113,13 +114,13 @@ export class TodoComponent implements OnInit {
     }
   }
 
-  handleLogout() {
+   handleLogout() {
     this.notify.showConfirmation("Proceed to Logout ?", "").then((res) => {
       if (res.isConfirmed) {
         // we will ask if the wants to really logout
         // let's remove the token
-        localStorage.removeItem("token");
-        localStorage.removeItem("store");
+        this.cookie.delete('token');
+        console.log("user logged out and token deleted"); 
         this.router.navigateByUrl("/login");
       }
     });

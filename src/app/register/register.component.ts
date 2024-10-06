@@ -83,19 +83,6 @@ export class RegisterComponent {
     }
   }
 
-  // clear the error message
-  clearErrorMessage() {
-    setTimeout(() => {
-      this.registrationErrorMessage = "";
-    }, 10000);
-  }
-  
-  //generate token 
-
-
-  // a function to clean up the spaces in the username and give it just one space 
- 
-
   // submit registration form data
   handleRegistration() {
     // get the input values
@@ -111,7 +98,6 @@ export class RegisterComponent {
         password: '',
         confirmPassword: '',
       }); 
-      this.clearErrorMessage(); 
     });
   }
 

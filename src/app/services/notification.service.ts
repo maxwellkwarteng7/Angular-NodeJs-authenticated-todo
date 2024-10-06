@@ -26,8 +26,8 @@ export class NotificationService {
       cancelButtonText: "No",
       showConfirmButton: true,
       confirmButtonText: "Yes",
-      cancelButtonColor: 'red', 
-      confirmButtonColor : "#28a745"
+      cancelButtonColor: 'black', 
+      confirmButtonColor : "#005db4"
     });
   }
 }
