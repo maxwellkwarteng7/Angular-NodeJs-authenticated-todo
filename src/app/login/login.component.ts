@@ -12,6 +12,7 @@ import { CommonModule } from "@angular/common";
 import { generateToken, storeUsername } from "../models/data";
 import { ApiService } from "../services/api.service";
 import { userLogins } from "../models/interface";
+import { CookieService } from "ngx-cookie-service";
 
 @Component({
   selector: "app-login",
@@ -25,7 +26,7 @@ export class LoginComponent {
   loginErrorMessage: string = "";
 
   // injecting the router service to use it 
-  constructor(private router : Router ,private apiCall : ApiService) {}
+  constructor(private router : Router ,private apiCall : ApiService , private cookie : CookieService) {}
 
   personDetails: LoginInfo = new LoginInfo();
   loginForm: FormGroup = new FormGroup({
@@ -42,19 +43,16 @@ export class LoginComponent {
     }
   }
 
-  // function to clear the login Error message
-  clearLoginErrorMessage() {
-    setTimeout(() => {
-      this.loginErrorMessage = "";
-    }, 10000);
-  }
 
+// a function to handle user login 
   handleLoginSubmission() {
-    let loginDetails : userLogins = this.loginForm.value;
+    let loginDetails: userLogins = this.loginForm.value;
+    //make an api call to the backend 
     this.apiCall.loginUser('/login', loginDetails).subscribe((res) => {
-      console.log(res.token);
+      this.cookie.set('token', res.token, { expires: 7, sameSite: 'Strict' });
+      this.router.navigateByUrl('todo'); 
     }, (err) => {
-      console.log(err.error); 
+      this.loginErrorMessage = err.error.msg; 
     }); 
     // reset the form
     this.loginForm.reset({
