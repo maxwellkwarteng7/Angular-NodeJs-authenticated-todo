@@ -10,6 +10,10 @@ import {
   ValidationErrors,
 } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
+import { registerUser } from "../models/interface";
+import { HttpClient } from "@angular/common/http";
+import { ApiService } from "../services/api.service";
+import { NotificationService } from "../services/notification.service";
 
 
 
@@ -26,7 +30,7 @@ export class RegisterComponent {
   //registration error
   registrationErrorMessage: string = "";
   //injecting the router service to use in navigation to other pages
-  router = inject(Router);
+  constructor(private router : Router , private apicall : ApiService , private notify : NotificationService){}
   // creating the form group to handle the registration form
   registerForm: FormGroup = new FormGroup(
     {
@@ -96,23 +100,19 @@ export class RegisterComponent {
   handleRegistration() {
     // get the input values
     let registrationInputs = this.registerForm.value;
-    //check if username already exists
-    let username = localStorage.getItem(registrationInputs.username);
-    if (username) {
-      this.registerForm.reset();
-      this.registrationErrorMessage = "Username is already taken";
-      this.clearErrorMessage();
-    } else { 
-      // store the data 
-      localStorage.setItem(
-        registrationInputs.username,
-        registrationInputs.password
-      );
-      // reset the form
-      this.registerForm.reset();
-      //navigate to login
-      this.router.navigateByUrl("/login");
-    }
+    delete registrationInputs.confirmPassword; 
+    this.apicall.registerUser(registrationInputs, '/register').subscribe((res) => {
+      this.notify.showSuccess('Registration successful', 'login now');
+      this.router.navigateByUrl('login'); 
+    }, (error) => {
+      this.registrationErrorMessage = error.error.msg[0]; 
+      this.registerForm.reset({
+        username : registrationInputs.username , 
+        password: '',
+        confirmPassword: '',
+      }); 
+      this.clearErrorMessage(); 
+    });
   }
 
 

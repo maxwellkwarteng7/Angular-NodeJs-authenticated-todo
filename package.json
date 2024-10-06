@@ -9,7 +9,8 @@
     "test": "ng test",
     "c": "ng generate component",
     "s": "ng generate service",
-    "g": "ng generate guard"
+    "g": "ng generate guard",
+    "e": "ng generate environments"
   },
   "private": true,
   "dependencies": {
