@@ -1,0 +1,136 @@
+<div
+  class="w-full h-[100vh] bg-gray-300 flex items-center justify-center relative"
+>
+  <!-- making the login card  -->
+  <div
+    class="w-[85%] h-[70%] rounded-lg md:flex items-center lg:w-[850px] bg-white shadow-lg "
+  >
+  <div
+  class="hidden w-[50%] h-[70vh] bg-white rounded-l-lg md:flex items-center justify-center"
+>
+  <!-- adding a container in here to place in gif or something  -->
+  <div class="w-full h-full bg-transparent overflow-hidden rounded-l-lg">
+    <img
+      src="/sign-up-image.jpg"
+      alt="...register"
+      class="w-full h-full object-cover object-center"
+      loading="eager"
+    />
+  </div>
+</div>
+<!-- end of the first part  -->
+
+<!-- second part begins here  -->
+
+    <div
+      class="w-full h-full flex items-center justify-center rounded-lg md:w-[50%] md:rounded-none md:rounded-l-lg"
+    >
+      <!-- the login content part  -->
+      <div class="w-[80%] min-h-[70%]">
+        <div class="flex items-center gap-1 justify-center">
+          <h3 class="text-center font-semibold uppercase">Sign Up</h3>
+          <span class="mdi mdi-account-plus text-lg font-semibold"></span>
+        </div>
+        <p class="text-center tracking-wide py-3">Create an account</p>
+        <p class="text-[12px] text-red-500 text-center ">{{registrationErrorMessage}}</p>
+        <!-- container to hold the input items  -->
+        <form  [formGroup]="registerForm">
+          <div class="flex flex-col items-center gap-3 w-full my-5 text-sm">
+          
+            <div class="w-[80%] relative">
+              <div class="absolute top-[20%] left-[5px]">
+                <span class="mdi mdi-account text-md"></span>
+              </div>
+              <input
+                type="text"
+                placeholder="username"
+                class="bg-gray-100 text-sm md:text-md -lg rounded-md pl-7 w-full py-2 placeholder:text-black outline-none focus:border-b-[0.5px] focus:border-b-gray-600 focus:rounded-none"
+                name="username"
+                formControlName="username"
+              />
+            </div>
+            <div class="w-[80%]" *ngIf="field['username']['errors'] && field['username']['touched']">
+              <p class="text-[12px] text-red-500 " *ngIf="field['username']['errors']['required']">Username is required</p>
+              <p class="text-[12px] text-red-500 " *ngIf="field['username']['errors']['maxlength']">Username cannot be more than 30 characters</p>
+        
+            </div>
+            <div class="w-[80%] relative">
+              <div class="absolute top-[20%] left-[5px]">
+                <span class="mdi mdi-lock text-md"></span>
+              </div>
+              <input
+                [type]="inputType()"
+                placeholder="Password"
+                class="text-sm md:text-md bg-gray-100 rounded-md w-full py-2 pl-7 pr-8 placeholder:text-black outline-none focus:bg-white focus:border-b-[0.5px] focus:border-b-gray-600 focus:rounded-none"
+                name="password"
+                formControlName="password"
+              />
+              <div
+                (click)="changeInputType('password')"
+                class="absolute right-[7px] top-[20%] cursor-pointer"
+              >
+                <span
+                  [className]="
+                    inputType() == 'password'
+                      ? 'mdi mdi-eye-off text-md'
+                      : 'mdi mdi-eye text-md'
+                  "
+                ></span>
+              </div>
+            </div>
+           <div class="w-[80%]" *ngIf="field['password']['errors'] && field['password']['touched']">
+            <p class="text-[12px] text-red-500" *ngIf="field['password']['errors']['required']">Password is required</p>
+            <p class="text-[12px] text-red-500" *ngIf="field['password']['errors']['minlength']">Password must be 6 characters or more</p>
+            
+           </div>
+            <div class="w-[80%] relative">
+              <div class="absolute top-[20%] left-[5px]">
+                <span class="mdi mdi-lock text-md"></span>
+              </div>
+              <input
+                [type]="inputType1()"
+                placeholder="Confirm password"
+                class="text-sm md:text-md bg-gray-100 rounded-md w-full py-2 pl-7 pr-8 placeholder:text-black outline-none focus:bg-white focus:border-b-[0.5px] focus:border-b-gray-600 focus:rounded-none"
+                name="password"
+                formControlName="confirmPassword"
+              />
+              <div
+                (click)="changeInputType('confirmPassword')"
+                class="absolute right-[7px] top-[20%] cursor-pointer"
+              >
+                <span
+                  [className]="
+                    inputType1() == 'password'
+                      ? 'mdi mdi-eye-off text-md'
+                      : 'mdi mdi-eye text-md'
+                  "
+                ></span>
+              </div>
+            </div>
+            <div class="w-[80%]" *ngIf="field['confirmPassword']['errors'] && field['confirmPassword']['touched']">
+              <p class="text-[12px] text-red-500" *ngIf="field['confirmPassword']['errors']['required']">confirmation  is required</p>
+             </div>
+             <p class="text-[12px] w-[80%] text-red-500" *ngIf="registerForm.errors?.['mismatch']">Passwords do not match</p>
+          </div>
+          <div class="flex flex-row items-center justify-center mt-5">
+            <button
+              (click)="handleRegistration()"
+              [className]="registerForm.invalid ? 'w-[80%] py-2 bg-primary opacity-[.5] shadow-md text-white rounded-full cursor-pointer' : 'w-[80%] py-2 bg-primary shadow-md text-white rounded-full cursor-pointer'"
+              [disabled]="registerForm.invalid"
+            >
+              Sign Up
+            </button>
+          </div>
+        </form>
+        <!-- Dont have an account ?  -->
+        <div class="flex items-center justify-center mt-5">
+          <div class="flex items-center gap-2 text-sm md:text-md">
+            <p>Already have an account ?</p>
+            <a routerLink="/login" class="text-primary">Login</a>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+  </div>
+</div>
