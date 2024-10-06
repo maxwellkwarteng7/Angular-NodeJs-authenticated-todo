@@ -16,3 +16,12 @@ export enum Icon {
   info = 'info', 
   warning = 'warning'
 }
+
+export interface registerUser {
+  username: string, 
+  password : string 
+}
+
+export interface userToken {
+  token : string ,
+}

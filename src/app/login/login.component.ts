@@ -10,6 +10,8 @@ import {
 } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { generateToken, storeUsername } from "../models/data";
+import { ApiService } from "../services/api.service";
+import { userLogins } from "../models/interface";
 
 @Component({
   selector: "app-login",
@@ -23,7 +25,7 @@ export class LoginComponent {
   loginErrorMessage: string = "";
 
   // injecting the router service to use it 
-  router = inject(Router); 
+  constructor(private router : Router ,private apiCall : ApiService) {}
 
   personDetails: LoginInfo = new LoginInfo();
   loginForm: FormGroup = new FormGroup({
@@ -48,30 +50,12 @@ export class LoginComponent {
   }
 
   handleLoginSubmission() {
-  
-
-    let loginDetails = this.loginForm.value;
-    const details = localStorage.getItem(loginDetails.username);
-    if (details) {
-      if (details === loginDetails.password) {
-        // set the global state username to the users username 
-        storeUsername(loginDetails.username); 
-        // generate a token of the user for authentication 
-        localStorage.setItem('token', generateToken()); 
-        // navigate the user to the todo page 
-        this.router.navigateByUrl('/todo'); 
-      } else {
-        // set the error message to the loginErrorMessage variable 
-        this.loginErrorMessage = "Incorrect password, please try again.";
-        // clear the error message after some set time 
-        this.clearLoginErrorMessage();
-      }
-    } else {
-       // set the error message to the loginErrorMessage variable 
-      this.loginErrorMessage = "We cannot find an account for this username";
-       // clear the error message after some set time 
-      this.clearLoginErrorMessage();
-    }
+    let loginDetails : userLogins = this.loginForm.value;
+    this.apiCall.loginUser('/login', loginDetails).subscribe((res) => {
+      console.log(res.token);
+    }, (err) => {
+      console.log(err.error); 
+    }); 
     // reset the form
     this.loginForm.reset({
       username: loginDetails.username,
