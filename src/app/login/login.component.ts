@@ -9,7 +9,6 @@ import {
   Validators,
 } from "@angular/forms";
 import { CommonModule } from "@angular/common";
-import { generateToken, storeUsername } from "../models/data";
 import { ApiService } from "../services/api.service";
 import { userLogins } from "../models/interface";
 import { CookieService } from "ngx-cookie-service";

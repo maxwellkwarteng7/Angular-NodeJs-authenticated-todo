@@ -4,10 +4,6 @@ export interface userLogins {
 }
 
 
-export interface todo {
-  task: string, 
-  id : number 
-}
 
 
 export enum Icon {
@@ -24,4 +20,12 @@ export interface registerUser {
 
 export interface userToken {
   token : string ,
+}
+
+export interface userTodo {
+  id: number, 
+  todo: string, 
+  userId: number, 
+  createdAt: Date, 
+  updatedAt : Date ,
 }

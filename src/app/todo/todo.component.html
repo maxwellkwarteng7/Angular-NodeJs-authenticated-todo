@@ -51,8 +51,8 @@
       <!-- where the todos will be  -->
        <div class="w-full">
         <!-- the todo items  -->
-         @if(userTodos()){
-            @for (item of userTodos(); track $index) {
+         @if(data){
+            @for (item of data; track $index) {
                 <div class="flex items-center justify-between shadow-sm py-3 my-2 border-b-[0.2px] border-b-gray-200">
                     <div class="flex items-center cursor-pointer" (click)="completed(item.id)">
                         <div class="pr-2">
@@ -61,10 +61,10 @@
                                 <span class="mdi mdi-check text-[12px] text-white "></span>
                             </div>
                         </div>
-                        <p [className]="clicked ? 'text-[13px] line-through  ml-3 md:text-[15px]  ' : 'text-[13px] ml-3 md:text-[15px] '" >{{item.task}} </p>
+                        <p [className]="clicked ? 'text-[13px] line-through  ml-3 md:text-[15px]  ' : 'text-[13px] ml-3 md:text-[15px] '" >{{item.todo}} </p>
                     </div>
                   <div class="pl-5">
-                    <div class="w-[25px] h-[25px] rounded-full hover:bg-gray-200 bg-gray-100 md:w-[30px] md:h-[30px] cursor-pointer" (click)="handleDelete(item.id)">
+                    <div class="w-[25px] h-[25px] rounded-full hover:bg-gray-200 bg-gray-100 md:w-[30px] md:h-[30px] cursor-pointer">
                         <h1 class="text-center md:text-[18px]">x</h1>
                      </div>
                   </div>
