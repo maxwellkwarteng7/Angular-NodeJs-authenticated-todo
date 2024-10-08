@@ -12,7 +12,7 @@ import { Router } from "@angular/router";
 import { NotificationService } from "../services/notification.service";
 import { CookieService } from "ngx-cookie-service";
 import { ApiService } from "../services/api.service";
-import { userTodo } from "../models/interface";
+import { todoPayload, userTodo } from "../models/interface";
 
 @Component({
   selector: "app-todo",
@@ -35,6 +35,9 @@ export class TodoComponent implements OnInit {
   // userTodos = signal<userTodo[] | null[]>([]);
   data: userTodo[] = []; 
 
+  // error message variable 
+  errorMessage: string = ''; 
+
   ngOnInit(): void {
     this.getAllUserTodos(); 
   }
@@ -42,7 +45,6 @@ export class TodoComponent implements OnInit {
   // get the todos 
   getAllUserTodos() {
     this.apiCall.getUserTodos('/dashboard').subscribe((res) => {
-      console.log(res); 
       this.data = res;
     }, (error) => {
       console.log(error); 
@@ -70,7 +72,16 @@ export class TodoComponent implements OnInit {
   }
 
   handleTodoSubmission() {
-    console.log('Hello you got it '); 
+    const todoInput : todoPayload = this.todoForm.value; 
+    this.apiCall.createNewTodo('/create-todo', todoInput).subscribe((res) => {
+      this.resetForm();
+      this.getAllUserTodos(); 
+      this.errorMessage = ''; 
+      this.notify.showSuccess('Todo created', '');
+    }, (error) => {
+      this.resetForm(); 
+      this.errorMessage = error.error.msg; 
+    })
   }
 
    handleLogout() {
@@ -86,5 +97,16 @@ export class TodoComponent implements OnInit {
   }
 
   // handle todo delete
+  handleTodoDelete(id: number) {
+    this.notify.showConfirmation('Proceed to delete ?', 'You cannot revert this').then((result) => {
+      if (result.isConfirmed) {
+        const endpoint = `/delete-todo/${id}`; 
+        this.apiCall.deleteTodo(endpoint).subscribe((res) => {
+          this.getAllUserTodos(); 
+          this.notify.showSuccess('Todo deleted', '');
+        })
+      }
+    })
+  }
  
 }
