@@ -13,11 +13,13 @@ import { NotificationService } from "../services/notification.service";
 import { CookieService } from "ngx-cookie-service";
 import { ApiService } from "../services/api.service";
 import { todoPayload, userTodo } from "../models/interface";
+import { NgxSkeletonLoaderModule } from "ngx-skeleton-loader";
+
 
 @Component({
   selector: "app-todo",
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule , NgxSkeletonLoaderModule],
   templateUrl: "./todo.component.html",
   styleUrl: "./todo.component.scss",
 })
@@ -35,11 +37,22 @@ export class TodoComponent implements OnInit {
   // userTodos = signal<userTodo[] | null[]>([]);
   data: userTodo[] = []; 
 
+  // is loading variable 
+  isLoading: boolean = true; 
+
   // error message variable 
   errorMessage: string = ''; 
 
   ngOnInit(): void {
-    this.getAllUserTodos(); 
+    this.getAllUserTodos();
+    this.stopLoading(); 
+  }
+
+  //start loading 
+  stopLoading() {
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 1500);
   }
 
   // get the todos 
@@ -72,12 +85,14 @@ export class TodoComponent implements OnInit {
   }
 
   handleTodoSubmission() {
+    this.isLoading = true; 
     const todoInput : todoPayload = this.todoForm.value; 
     this.apiCall.createNewTodo('/create-todo', todoInput).subscribe((res) => {
       this.resetForm();
       this.getAllUserTodos(); 
       this.errorMessage = ''; 
       this.notify.showSuccess('Todo created', '');
+      this.stopLoading(); 
     }, (error) => {
       this.resetForm(); 
       this.errorMessage = error.error.msg; 
@@ -90,20 +105,22 @@ export class TodoComponent implements OnInit {
         // we will ask if the wants to really logout
         // let's remove the token
         this.cookie.delete('token');
-        console.log("user logged out and token deleted"); 
         this.router.navigateByUrl("/login");
       }
     });
   }
 
+
   // handle todo delete
   handleTodoDelete(id: number) {
     this.notify.showConfirmation('Proceed to delete ?', 'You cannot revert this').then((result) => {
       if (result.isConfirmed) {
+        this.isLoading = true; 
         const endpoint = `/delete-todo/${id}`; 
         this.apiCall.deleteTodo(endpoint).subscribe((res) => {
           this.getAllUserTodos(); 
           this.notify.showSuccess('Todo deleted', '');
+          this.stopLoading();
         })
       }
     })

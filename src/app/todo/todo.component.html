@@ -1,86 +1,100 @@
-<div class="w-full h-[100vh] overflow-y-scroll bg-center bg-cover bg-no-repeat " style="background-image:  url('todo-background.jpg');">
+<div class="w-full h-[100vh] overflow-y-scroll bg-center bg-cover bg-no-repeat"
+  style="background-image: url('todo-background.jpg')">
   <!-- the todo card  -->
   <div class="w-full h-full flex items-center justify-center relative">
-
     <!-- the todo card itself -->
-    <div
-      class="w-[95%] min-h-[50%] rounded-xl lg: max-w-[500px] bg-white shadow-lg p-5 absolute top-[15%]"
-    >
+    <div class="w-[95%] min-h-[50%] rounded-xl lg: max-w-[500px] bg-white shadow-lg p-5 absolute top-[15%]">
       <!-- the contents of the todo card -->
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
           <p class="text-black font-bold text-lg">To-Do List</p>
           <div class="w-[24px] h-[24px] overflow-hidden">
-            <img
-              src="/todo-icon.png"
-              alt="..icon"
-              class="object-cover w-full h-full"
-            />
+            <img src="/todo-icon.png" alt="..icon" class="object-cover w-full h-full" />
           </div>
         </div>
         <!-- the logout button -->
-        <button
-        (click)="handleLogout()"
-         class="border-none rounded-[2rem] bg-black text-white md:py-[5px]  md:px-4  py-[4px] px-3 text-[15px]">
+        <button (click)="handleLogout()"
+          class="border-none rounded-[2rem] bg-black text-white md:py-[5px] md:px-4 py-[4px] px-3 text-[15px]">
           Logout
         </button>
       </div>
 
-      
       <!-- the input field  -->
-      <form action="" class="my-10"[formGroup]="todoForm">
+      <form action="" class="my-10" [formGroup]="todoForm">
         <div class="relative">
-          <input
-            type="text"
-            placeholder="Add your task"
+          <input type="text" placeholder="Add your task"
             class="border-solid border-2 w-full py-3 pl-4 bg-gray-100 outline-none text-[14px] lg:text-[16px] pr-[25%]"
-            formControlName="todo"
-          />
-          <button
-          [disabled]="todoForm.invalid"
-          (click)="handleTodoSubmission()"
-            type="submit"
-            [className]="todoForm.invalid ? 'absolute right-0 border-none bg-primary opacity-50 text-white text-[14px] h-full px-[5%] md:px-[6%] lg:px-[7%] lg:text-[16px]' : 'absolute right-0 border-none bg-primary text-white text-[14px] h-full px-[5%] md:px-[6%] lg:px-[7%] lg:text-[16px]'"
-          >
+            formControlName="todo" />
+          <button [disabled]="todoForm.invalid" (click)="handleTodoSubmission()" type="submit" [className]="
+              todoForm.invalid
+                ? 'absolute right-0 border-none bg-primary opacity-50 text-white text-[14px] h-full px-[5%] md:px-[6%] lg:px-[7%] lg:text-[16px]'
+                : 'absolute right-0 border-none bg-primary text-white text-[14px] h-full px-[5%] md:px-[6%] lg:px-[7%] lg:text-[16px]'
+            ">
             Add
           </button>
         </div>
         <div class="pt-1 pl-1" *ngIf="f['todo']['errors'] && f['todo']['touched']">
-            <p class="text-[12px] pl-[2px] text-red-500" *ngIf="f['todo']['errors']['required']">Task is required</p>
-          </div>
-          <div class="pt-1 pl-1">
-            <p class="text-[13px] text-red-500">{{errorMessage}}</p>
-           </div>
+          <p class="text-[12px] pl-[2px] text-red-500" *ngIf="f['todo']['errors']['required']">
+            Task is required
+          </p>
+        </div>
+        <div class="pt-1 pl-1">
+          <p class="text-[13px] text-red-500">{{ errorMessage }}</p>
+        </div>
       </form>
       <!-- where the todos will be  -->
-       <div class="w-full">
+      <div class="w-full">
         <!-- the todo items  -->
-         @if(data.length > 0){
+        @if(data.length > 0){ 
+          <div *ngIf="isLoading">
             @for (item of data; track $index) {
-                <div class="flex items-center justify-between shadow-sm py-3 my-2 border-b-[0.2px] border-b-gray-200">
-                    <div class="flex items-center cursor-pointer" (click)="completed(item.id)">
-                        <div class="pr-2">
-                            <div
-                             [className]="clicked ? 'w-[20px] h-[20px] md:w-[25px] md:h-[25px]  rounded-full flex items-center justify-center bg-primary' : 'w-[20px] h-[20px] md:w-[25px] md:h-[25px]  rounded-full border-solid border-2  flex items-center justify-center'"  >
-                                <span class="mdi mdi-check text-[12px] text-white "></span>
-                            </div>
-                        </div>
-                        <p [className]="clicked ? 'text-[13px] line-through  ml-3 md:text-[15px]  ' : 'text-[13px] ml-3 md:text-[15px] '" >{{item.todo}} </p>
-                    </div>
-                  <div class="pl-5">
-                    <div class="w-[25px] h-[25px] rounded-full hover:bg-gray-200 bg-gray-100 md:w-[30px] md:h-[30px] cursor-pointer" (click)="handleTodoDelete(item.id)">
-                        <h1 class="text-center md:text-[18px]">x</h1>
-                     </div>
+              <div class="flex items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                  <ngx-skeleton-loader appearance="circle"></ngx-skeleton-loader>
+                  <div class="w-[280px]">
+                    <ngx-skeleton-loader appearance="line"></ngx-skeleton-loader>
                   </div>
-                  </div>
-            }
-         }@else {
-            <div class="text-center text-[14px]">
-                No todo items added ...
+                </div>
+      
+                <div>
+                  <ngx-skeleton-loader appearance="circle"></ngx-skeleton-loader>
+                </div>
+              </div>
+              }
+          </div>
+
+      @for (item of data; track $index) {
+        <div class="flex items-center justify-between shadow-sm py-3 my-2 border-b-[0.2px] border-b-gray-200" *ngIf="!isLoading" >
+          <div class="flex items-center cursor-pointer" (click)="completed(item.id)">
+            <div class="pr-2">
+              <div [className]="
+                  clicked
+                    ? 'w-[20px] h-[20px] md:w-[25px] md:h-[25px]  rounded-full flex items-center justify-center bg-primary'
+                    : 'w-[20px] h-[20px] md:w-[25px] md:h-[25px]  rounded-full border-solid border-2  flex items-center justify-center'
+                ">
+                <span class="mdi mdi-check text-[12px] text-white"></span>
+              </div>
             </div>
-         }
-         
-       </div>
+            <p [className]="
+                clicked
+                  ? 'text-[13px] line-through  ml-3 md:text-[15px]  '
+                  : 'text-[13px] ml-3 md:text-[15px] '
+              ">
+              {{ item.todo }}
+            </p>
+          </div>
+          <div class="pl-5">
+            <div
+              class="w-[25px] h-[25px] rounded-full hover:bg-gray-200 bg-gray-100 md:w-[30px] md:h-[30px] cursor-pointer"
+              (click)="handleTodoDelete(item.id)">
+              <h1 class="text-center md:text-[18px]">x</h1>
+            </div>
+          </div>
+        </div>
+        } }@else {
+        <div class="text-center text-[14px]">No todo items added ...</div>
+        }
+      </div>
     </div>
   </div>
 </div>
