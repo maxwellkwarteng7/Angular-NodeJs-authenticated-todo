@@ -29,3 +29,7 @@ export interface userTodo {
   createdAt: Date, 
   updatedAt : Date ,
 }
+
+export interface todoPayload {
+  todo : string 
+}
