@@ -12,6 +12,7 @@ import { CommonModule } from "@angular/common";
 import { ApiService } from "../services/api.service";
 import { userLogins } from "../models/interface";
 import { CookieService } from "ngx-cookie-service";
+import * as progress from "nprogress";
 
 @Component({
   selector: "app-login",
@@ -24,8 +25,12 @@ export class LoginComponent {
   inputType = signal("password");
   loginErrorMessage: string = "";
 
-  // injecting the router service to use it 
-  constructor(private router : Router ,private apiCall : ApiService , private cookie : CookieService) {}
+  // injecting the router service to use it
+  constructor(
+    private router: Router,
+    private apiCall: ApiService,
+    private cookie: CookieService
+  ) {}
 
   personDetails: LoginInfo = new LoginInfo();
   loginForm: FormGroup = new FormGroup({
@@ -34,7 +39,7 @@ export class LoginComponent {
   });
 
   changeInputType() {
-    // check input type variable and make necessary changes to th signal 
+    // check input type variable and make necessary changes to th signal
     if (this.inputType() == "password") {
       this.inputType.set("text");
     } else {
@@ -42,17 +47,26 @@ export class LoginComponent {
     }
   }
 
-
-// a function to handle user login 
+  // a function to handle user login
   handleLoginSubmission() {
+    //start the loader
+    progress.start();
+    // get the input values .
     let loginDetails: userLogins = this.loginForm.value;
-    //make an api call to the backend 
-    this.apiCall.loginUser('/login', loginDetails).subscribe((res) => {
-      this.cookie.set('token', res.token, { expires: 7, sameSite: 'Strict' });
-      this.router.navigateByUrl('todo'); 
-    }, (err) => {
-      this.loginErrorMessage = err.error.msg; 
-    }); 
+
+    //make an api call to the backend
+    this.apiCall.loginUser("/login", loginDetails).subscribe(
+      (res) => {
+        this.cookie.set("token", res.token, { expires: 7, sameSite: "Strict" });
+        // using a settimeout so we can see the loader 
+        progress.done(); 
+        this.router.navigateByUrl("todo");
+      },
+      (err) => {
+        this.loginErrorMessage = err.error.msg;
+        progress.done(); 
+      }
+    );
     // reset the form
     this.loginForm.reset({
       username: loginDetails.username,
